@@ -13,8 +13,10 @@ class Voice(commands.Cog, name="Voice"):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         # Checks that the user joined a VC (before none, now not none) and that it isn't the AFK channel
-        if before.channel is None and after.channel is not None and not after.afk:
-            print("{} has joined {}.".format(member.name, after.channel))
+        role = discord.utils.find(lambda r: r.name == 'Student', member.guild.roles)
+        if member.bot == False and role in member.roles:
+            if before.channel is None and after.channel is not None and not after.afk:
+                print("{} has joined {}.".format(member.name, after.channel))
 
 
 def setup(bot):
