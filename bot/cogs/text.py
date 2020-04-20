@@ -3,6 +3,7 @@ import sys
 import logging
 
 from discord.ext import commands
+from helpers import role_filter, team_channel
 
 
 class Text(commands.Cog, name="Online"):
@@ -12,11 +13,16 @@ class Text(commands.Cog, name="Online"):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_message(self, member):
+    async def on_message(self, message):
         # Checks that a sent message is not from a bot and is from a user with a student role
-        role = discord.utils.find(lambda r: r.name == 'Student', member.guild.roles)  # TODO: Is this too slow?
-        if not member.author.bot and role in member.author.roles:
-            logging.info(f"{member.author.name} has sent a message in {member.channel}")
+        if (
+            not message.author.bot
+            and role_filter.check_roles(message.author) in message.author.roles
+            and team_channel.is_team_channel(message.channel)
+        ):
+            logging.info(
+                f"{message.author.name} has sent a message in {message.channel}"
+            )
 
 
 def setup(bot):

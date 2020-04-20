@@ -2,7 +2,10 @@ import discord
 import sys
 import logging
 
+from helpers import role_filter
+
 from discord.ext import commands
+from main import include_roles, exclude_roles
 
 
 class Online(commands.Cog, name="Online"):
@@ -17,8 +20,11 @@ class Online(commands.Cog, name="Online"):
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         # Checks if a user's status changed, meaning they used discord in some way today
-        role = discord.utils.find(lambda r: r.name == 'Student', after.guild.roles)
-        if not after.bot and role in after.roles and str(before.status) != str(after.status):
+        if (
+            not after.bot
+            and role_filter.check_roles(after)
+            and str(before.status) != str(after.status)
+        ):
             logging.info(f"{after.name} has gone {after.status.name}.")
 
 
