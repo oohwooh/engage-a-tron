@@ -19,10 +19,6 @@ initial_cogs = [
     "cogs.text",
 ]
 
-# The role strings to filter for and against
-include_roles = ["Student"]
-exclude_roles = ["Global Staff"]
-
 # Here we load our extensions(cogs) listed above in [initial_extensions].
 for cog in initial_cogs:
     # noinspection PyBroadException

@@ -16,13 +16,14 @@ class Text(commands.Cog, name="Online"):
     async def on_message(self, message):
         # Checks that a sent message is not from a bot and is from a user with a student role
         if (
-            not message.author.bot
-            and role_filter.check_roles(message.author) in message.author.roles
-            and team_channel.is_team_channel(message.channel)
+                not message.author.bot
+                and role_filter.check_roles(message.author)
         ):
-            logging.info(
-                f"{message.author.name} has sent a message in {message.channel}"
-            )
+            if team_channel.is_team_channel(message.channel):
+                logging.info(f"{message.author.name} has sent a message in team channel {message.channel}")
+            else:
+                logging.info(f"{message.author.name} has sent a message in non-team channel {message.channel}")
+
 
 
 def setup(bot):

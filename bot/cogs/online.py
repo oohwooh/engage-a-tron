@@ -2,10 +2,8 @@ import discord
 import sys
 import logging
 
-from helpers import role_filter
-
+from helpers import team_channel, role_filter
 from discord.ext import commands
-from main import include_roles, exclude_roles
 
 
 class Online(commands.Cog, name="Online"):
