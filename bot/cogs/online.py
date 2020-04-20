@@ -1,5 +1,6 @@
 import discord
 import sys
+import logging
 
 from discord.ext import commands
 
@@ -17,9 +18,8 @@ class Online(commands.Cog, name="Online"):
     async def on_member_update(self, before, after):
         # Checks if a user's status changed, meaning they used discord in some way today
         role = discord.utils.find(lambda r: r.name == 'Student', after.guild.roles)
-        if after.bot == False and role in after.roles:
-            if str(before.status) != str(after.status):
-                print("{} has gone {}.".format(after.name, after.status))
+        if not after.bot and role in after.roles and str(before.status) != str(after.status):
+            logging.info(f"{after.name} has gone {after.status.name}.")
 
 
 def setup(bot):
