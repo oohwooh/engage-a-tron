@@ -3,6 +3,8 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.schema import UniqueConstraint
+from passlib.apps import custom_app_context
+from json import dumps
 
 from os import getenv
 from datetime import datetime
@@ -35,6 +37,14 @@ class Online(Base):
     def __repr__(self):
         return f"{self.discord_user_id}"
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "discord_user_id": self.discord_user_id,
+            "date": self.date.isoformat(),
+            "online": self.online
+        }
+
 
 class Voice(Base):
     __tablename__ = "voice"
@@ -53,6 +63,15 @@ class Voice(Base):
                 f"{self.discord_user_id} joined non-team vd {self.vc_id} on {self.date}"
             )
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "discord_user_id": self.discord_user_id,
+            "date": self.date.isoformat(),
+            "vc_id": self.vc_id,
+            "is_team_channel": self.is_team_channel
+        }
+
 
 class Text(Base):
     __tablename__ = "text"
@@ -69,6 +88,14 @@ class Text(Base):
             return (
                 f"{self.discord_user_id} messaged in a non-team channel on  {self.date}"
             )
+
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "discord_user_id": self.discord_user_id,
+            "date": self.date.isoformat(),
+            "is_team_channel": self.is_team_channel
+        }
 
 
 def session_creator() -> Session:
