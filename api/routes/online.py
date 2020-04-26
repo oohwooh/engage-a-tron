@@ -6,17 +6,18 @@ from dateutil import parser as date_parser
 secret = getenv("API_SECRET", None)
 
 online_parser = reqparse.RequestParser()
+online_parser.add_argument("secret", dest="secret", location="args")
 online_parser.add_argument(
-    "secret", dest="secret",
-    location="args"
+    "start_date",
+    dest="start_date",
+    location="args",
+    type=lambda x: date_parser.parse(x).date(),
 )
 online_parser.add_argument(
-    "start_date", dest="start_date",
-    location="args", type=lambda x: date_parser.parse(x).date()
-)
-online_parser.add_argument(
-    "end_date", dest="end_date",
-    location="args", type=lambda x: date_parser.parse(x).date()
+    "end_date",
+    dest="end_date",
+    location="args",
+    type=lambda x: date_parser.parse(x).date(),
 )
 
 
@@ -50,7 +51,9 @@ class OnlineAPI(Resource):
         if start_date is not None and end_date is not None:
             """Return all data between two datetimes"""
             session = session_creator()
-            results = session.query(Online).filter(Online.date <= end_date, Online.date >= start_date)
+            results = session.query(Online).filter(
+                Online.date <= end_date, Online.date >= start_date
+            )
             return [i.as_dict() for i in results]
 
     def get(self):
