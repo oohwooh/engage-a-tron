@@ -1,11 +1,20 @@
 from os import getenv
 import logging
 import traceback
-
+import os, sys, inspect
 from discord.ext.commands import Bot
+
+# Long story short, imports bad.
+# This is needed to allow the cogs to import database, as python doesn't check in the parent directory otherwise.
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 logging.basicConfig(level=logging.INFO)
+
+if BOT_TOKEN is None:
+    raise ValueError("You didn't supply a token! That's not going to work very well!")
 
 bot = Bot(
     command_prefix="e!",

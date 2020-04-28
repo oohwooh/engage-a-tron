@@ -3,7 +3,6 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.schema import UniqueConstraint
-from passlib.apps import custom_app_context
 from json import dumps
 
 from os import getenv
