@@ -9,6 +9,7 @@ COPY bot ./bot/
 COPY database ./database/
 COPY run_all.sh ./run_all.sh
 RUN chmod +x ./run_all.sh
+RUN chmod +x ./api/prod_run.sh
 
 EXPOSE 8000
 
