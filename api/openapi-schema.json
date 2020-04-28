@@ -1,0 +1,503 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Engage-A-Tron",
+        "version": "1.0.0",
+        "description": "This API returns information about user engamenent in the CodeDay Discord Server.\n\nImportnat note: Users who do not have the \"Student\" role are entirely ignored.",
+        "contact": {
+            "name": "Jake Cover",
+            "email": "jakecover@srnd.org"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://enagement-api.srnd.org",
+            "description": ""
+        },
+        {
+            "url": "https://enagement-api.codeday.org ",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/online": {
+            "summary": "Online",
+            "description": "This is updated when a user chanegs their discord status at all, from any state to any other state. Users can only appear here once per day, all other status chanegs are ignored. Additionally, the other two tracked events do not count for this, so if extreme percision is required, I recomend combining the other two endpoints to be sure that no activity is ignored. However, it is extremely unlikely that a user who joins a VC or sends a message does not have a status change in that day. ",
+            "get": {
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "description": "The start date of a time period to request. Includes specified date\n\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing. ",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    },
+                    {
+                        "name": "end_date",
+                        "description": "The start date of a time period to request. Includes specified date\r\n\r\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing.",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "unauthorized": {
+                                        "value": "\"unauthorized\""
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Did not provide the correct secret. If no secret is configured, then you must not provide one."
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Online-Response"
+                                },
+                                "examples": {
+                                    "Normal Response": {
+                                        "value": [
+                                            {
+                                                "id": 1,
+                                                "discord_user_id": 111111111111111100,
+                                                "date": "2020-04-28",
+                                                "online": true
+                                            },
+                                            {
+                                                "id": 2,
+                                                "discord_user_id": 222222222222222200,
+                                                "date": "2020-04-28",
+                                                "online": true
+                                            },
+                                            {
+                                                "id": 3,
+                                                "discord_user_id": 333333333333333300,
+                                                "date": "2020-04-28",
+                                                "online": true
+                                            },
+                                            {
+                                                "id": 5,
+                                                "discord_user_id": 444444444444444400,
+                                                "date": "2020-04-28",
+                                                "online": true
+                                            },
+                                            {
+                                                "id": 9,
+                                                "discord_user_id": 555555555555555600,
+                                                "date": "2020-04-28",
+                                                "online": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Requested Information"
+                    }
+                },
+                "summary": "Online",
+                "description": "Gets the data about online users"
+            }
+        },
+        "/text": {
+            "summary": "Messages",
+            "description": "This is updated every time a user sends a message on the server.",
+            "get": {
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "description": "The start date of a time period to request. Includes specified date\n\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing. ",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    },
+                    {
+                        "name": "end_date",
+                        "description": "The start date of a time period to request. Includes specified date\r\n\r\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing.",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Text-Response"
+                                },
+                                "examples": {
+                                    "Normal Response": {
+                                        "value": [
+                                            {
+                                                "id": 1,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "is_team_channel": false
+                                            },
+                                            {
+                                                "id": 2,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "is_team_channel": false
+                                            },
+                                            {
+                                                "id": 3,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "is_team_channel": false
+                                            },
+                                            {
+                                                "id": 4,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "is_team_channel": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Returns the requested information in JSON format"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "unauthorized": {
+                                        "value": "\"unauthorized\""
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Did not provide the correct secret. If no secret is configured, then you must not provide one."
+                    }
+                },
+                "summary": "Messages",
+                "description": "Gets the data about messages being sent"
+            }
+        },
+        "/voice": {
+            "summary": "Voice",
+            "description": "This is updated every time a user jpoins a voice channel. \n\nCurrently also ignores any switching voice channnels, just joining from disconnected.\n\n",
+            "get": {
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "description": "The start date of a time period to request. Includes specified date\n\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing. ",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    },
+                    {
+                        "name": "end_date",
+                        "description": "The start date of a time period to request. Includes specified date\r\n\r\nCan be a date or datetime, or basically whatever as it's being parsed by python's `dateutil.parser`, which seemed pretty robust in my testing.",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        },
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Voice-Response"
+                                },
+                                "examples": {
+                                    "Normal Response": {
+                                        "value": [
+                                            {
+                                                "id": 1,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 692525613122322400,
+                                                "is_team_channel": true
+                                            },
+                                            {
+                                                "id": 2,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 690615958133407700,
+                                                "is_team_channel": true
+                                            },
+                                            {
+                                                "id": 3,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 690286990700183600,
+                                                "is_team_channel": true
+                                            },
+                                            {
+                                                "id": 4,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 689545557261287400,
+                                                "is_team_channel": false
+                                            },
+                                            {
+                                                "id": 5,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 689545557261287400,
+                                                "is_team_channel": false
+                                            },
+                                            {
+                                                "id": 6,
+                                                "discord_user_id": 249705405372956670,
+                                                "date": "2020-04-28",
+                                                "vc_id": 689523845652021200,
+                                                "is_team_channel": false
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Returns the requested information in JSON format"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "unauthorized": {
+                                        "value": "\"unauthorized\""
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Did not provide the correct secret. If no secret is configured, then you must not provide one."
+                    }
+                },
+                "summary": "Voice",
+                "description": "Gets the data about voice channel interactions"
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Text-Response": {
+                "description": "",
+                "required": [
+                    "id",
+                    "discord_user_id",
+                    "date",
+                    "is_team_channel"
+                ],
+                "type": "object",
+                "properties": {
+                    "discord_user_id": {
+                        "description": "The user's Discord ID.",
+                        "type": "number"
+                    },
+                    "date": {
+                        "format": "date",
+                        "description": "The date that this event occured",
+                        "type": "string"
+                    },
+                    "is_team_channel": {
+                        "description": "Weather or not this message was sent in a team channel",
+                        "type": "boolean"
+                    },
+                    "id": {
+                        "description": "The row ID in Postgres. Probably not important.",
+                        "type": "number"
+                    }
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 2,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 3,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 4,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": true
+                    }
+                ]
+            },
+            "Online-Response": {
+                "description": "",
+                "required": [
+                    "id",
+                    "discord_user_id",
+                    "date",
+                    "online"
+                ],
+                "type": "object",
+                "properties": {
+                    "discord_user_id": {
+                        "description": "The user's Discord ID.",
+                        "type": "number"
+                    },
+                    "date": {
+                        "format": "date",
+                        "description": "The date that this event occured",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "The row ID in Postgres. Probably not important.",
+                        "type": "number"
+                    },
+                    "online": {
+                        "description": "If this user was online. This should always be true and probably doesn't need to exist, but it's here just in case we want to also store the oposite. ",
+                        "type": "boolean"
+                    }
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 2,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 3,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 4,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "is_team_channel": true
+                    }
+                ]
+            },
+            "Voice-Response": {
+                "description": "",
+                "required": [
+                    "id",
+                    "discord_user_id",
+                    "date",
+                    "is_team_channel",
+                    "vc_ud"
+                ],
+                "type": "object",
+                "properties": {
+                    "discord_user_id": {
+                        "description": "The user's Discord ID.",
+                        "type": "number"
+                    },
+                    "date": {
+                        "format": "date",
+                        "description": "The date that this event occured",
+                        "type": "string"
+                    },
+                    "is_team_channel": {
+                        "description": "Weather or not this message was sent in a team channel",
+                        "type": "boolean"
+                    },
+                    "id": {
+                        "description": "The row ID in Postgres. Probably not important.",
+                        "type": "number"
+                    },
+                    "vc_ud": {
+                        "description": "The discord ID of the channel that was joined. Could be used to estimate workshop engagement or something.",
+                        "type": "integer"
+                    }
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 692525613122322400,
+                        "is_team_channel": true
+                    },
+                    {
+                        "id": 2,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 690615958133407700,
+                        "is_team_channel": true
+                    },
+                    {
+                        "id": 3,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 690286990700183600,
+                        "is_team_channel": true
+                    },
+                    {
+                        "id": 4,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 689545557261287400,
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 5,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 689545557261287400,
+                        "is_team_channel": false
+                    },
+                    {
+                        "id": 6,
+                        "discord_user_id": 249705405372956670,
+                        "date": "2020-04-28",
+                        "vc_id": 689523845652021200,
+                        "is_team_channel": false
+                    }
+                ]
+            }
+        },
+        "securitySchemes": {
+            "shared-key": {
+                "type": "apiKey",
+                "description": "Look in Vault for the shared key",
+                "name": "secret",
+                "in": "query"
+            }
+        }
+    }
+}
