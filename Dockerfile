@@ -8,6 +8,7 @@ COPY api ./api/
 COPY bot ./bot/
 COPY database ./database/
 COPY run_all.sh ./run_all.sh
+RUN chmox +x ./run_all.sh
 
 EXPOSE 8000
 
