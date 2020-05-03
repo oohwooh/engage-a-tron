@@ -35,16 +35,19 @@ class TextAPI(Resource):
         if start_date is None and end_date is None:
             session = session_creator()
             results = session.query(Text).all()
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is not None and end_date is None:
             """Return all data since datetime"""
             session = session_creator()
             results = session.query(Text).filter(Text.date >= start_date)
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is None and end_date is not None:
             """Return all data after datetime"""
             session = session_creator()
             results = session.query(Text).filter(Text.date <= end_date)
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is not None and end_date is not None:
             """Return all data between two datetimes"""
@@ -52,6 +55,7 @@ class TextAPI(Resource):
             results = session.query(Text).filter(
                 Text.date <= end_date, Text.date >= start_date
             )
+            session.close()
             return [i.as_dict() for i in results]
 
     def get(self):

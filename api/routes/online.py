@@ -37,16 +37,19 @@ class OnlineAPI(Resource):
             """Return all data"""
             session = session_creator()
             results = session.query(Online).all()
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is not None and end_date is None:
             """Return all data since datetime"""
             session = session_creator()
             results = session.query(Online).filter(Online.date >= start_date)
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is None and end_date is not None:
             """Return all data after datetime"""
             session = session_creator()
             results = session.query(Online).filter(Online.date <= end_date)
+            session.close()
             return [i.as_dict() for i in results]
         if start_date is not None and end_date is not None:
             """Return all data between two datetimes"""
@@ -54,6 +57,7 @@ class OnlineAPI(Resource):
             results = session.query(Online).filter(
                 Online.date <= end_date, Online.date >= start_date
             )
+            session.close()
             return [i.as_dict() for i in results]
 
     def get(self):
