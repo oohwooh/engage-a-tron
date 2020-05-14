@@ -100,3 +100,6 @@ class Text(Base):
 def session_creator() -> Session:
     session = sessionmaker(bind=engine)
     return session()
+
+
+global_session: Session = session_creator()
